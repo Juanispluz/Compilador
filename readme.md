@@ -2,7 +2,7 @@
 
 **Tipo de Compilador:** Source to source
 
-[Breve explicacion del compilador]
+Este compilador traduce programas sencillos escritos en Python a su equivalente en C++, enfocándose principalmente en operaciones aritméticas básicas (+, -, *, /), asignaciones de variables y el uso de tipos de datos int, float, str. El objetivo es mostrar cómo un programa en Python puede ser analizado léxica, sintáctica y semánticamente para luego generar un código equivalente en C++ que pueda ser compilado y ejecutado en un entorno real.
 
 [Versiones de los lenguajes]
 
@@ -26,7 +26,17 @@ Python 3.13.7
 | **Delimitadores** | `:`, `;`, `,`, `(`, `)`, `[`, `]`, `{`, `}`, `\n` | `;`, `,`, `{`, `}`, `(`, `)`, `[`, `]`, | Caracteres que definen la estructura y separación del código. |
 
 ## Fases del compilador
-[Fases que usara el compilador explicadas de forma breve y consisa]
+**1. Análisis Léxico**
+En esta etapa el compilador lee el código fuente en Python y lo divide en tokens, que son las unidades más pequeñas con significado (palabras clave, identificadores, operadores, literales y delimitadores).
+
+**2. Análisis Sintáctico**
+Con la lista de tokens, el compilador construye el Árbol de Sintaxis Abstracta (ATS), organizando las estructuras del programa y verificando que la secuencia de tokens tenga una forma válida (por ejemplo, que una asignación esté bien escrita).
+
+**3. Análisis Semántico**
+Se validan los tipos de datos y la coherencia de las operaciones. Aquí se construye la tabla de símbolos, registrando las variables y sus tipos (int, float, str). Se revisa que las operaciones sean compatibles, por ejemplo, que no se sumen enteros con cadenas.
+
+**4. Generación de Código Final (C++)**
+Una vez validadas las fases anteriores, el compilador traduce el programa en Python a un programa equivalente en C++, manteniendo la misma lógica y asegurando que pueda ser compilado y ejecutado en un compilador real de C++.
 
 ### Diagrama de flujo de datos del compilador
 
