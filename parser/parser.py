@@ -157,7 +157,7 @@ class Parser:
         # EXPRESION
         expr = self.parsear_expresion()
         if expr is None:
-            self.errores.append(f"Error sintáctico: expresión esperada en la asignación de '{id_tok.valor}' linea {id_tok.linea}")
+            self.errores.append(f"Error sintáctico: expresión no esperada en la asignación de '{id_tok.valor}' linea {id_tok.linea}")
             return None
 
         nodo = NodoAST("Assign", id_tok.valor)
