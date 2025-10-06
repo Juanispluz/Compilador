@@ -49,27 +49,32 @@ Este compilador traduce programas sencillos escritos en Python a su equivalente 
 1.	Regla del Programa (Programa): La primera regla sintáctica define la estructura general del programa. Indica que un programa está formado por una secuencia de sentencias (instrucciones), que pueden estar separadas por saltos de línea.
 EJEMPLO:
 <img width="222" height="150" alt="image" src="https://github.com/user-attachments/assets/997c401b-1e4f-461c-bef9-326ccc71e036" />
+
 Aquí el programa tiene dos sentencias válidas: una asignación y una instrucción de impresión.
 
 2.	Regla de la Sentencia (Sentencia): La segunda regla describe qué tipos de sentencias pueden aparecer dentro de un programa. En este caso, una sentencia puede ser una instrucción de impresión (print), una asignación de variable, o una expresión aislada (como una operación matemática que no se guarda en ninguna variable).
 EJEMPLO:
 <img width="231" height="186" alt="image" src="https://github.com/user-attachments/assets/2e2582f7-ab21-4b06-91b2-232bd1924975" />
+
 Las tres líneas anteriores representan los tres tipos de sentencias que el parser sabe interpretar.
 
 3.	Regla de la Instrucción print (IMPRIMIR): La tercera regla específica cómo debe escribirse una instrucción print. Según la gramática, una sentencia print debe comenzar con la palabra clave print, seguida de un paréntesis de apertura, una expresión válida dentro de los paréntesis, y finalmente un paréntesis de cierre.
 EJEMPLO CORRECTO:
 <img width="247" height="89" alt="image" src="https://github.com/user-attachments/assets/fb6b6a5b-1835-4ddd-857b-5d800b41b03b" />
+
 Esta regla mantiene la coherencia con la sintaxis moderna de Python, donde el uso de paréntesis en print es obligatorio.
 
 4. Regla de Asignación (Assign)
 La cuarta regla sintáctica define cómo se realiza una asignación de valores a variables. En esta estructura, primero debe aparecer un identificador (el nombre de la variable), seguido del operador de asignación =, y finalmente una expresión que representa el valor que se le asignará.
 EJEMPLO:
 <img width="328" height="69" alt="image" src="https://github.com/user-attachments/assets/81e456b7-642b-4bfd-a065-5ddcaed6dd76" />
+
 Aquí, el identificador suma recibe el valor resultante de la expresión a + b * 3
 
 5. Reglas de expresiones y operaciones (Expr, Term, Factor): Esta regla define cómo se construyen las expresiones aritméticas y el orden en que deben evaluarse las operaciones. Una expresión (Expr) puede contener uno o varios términos separados por los operadores de suma (+) o resta (-). A su vez, cada término (Term) puede incluir factores separados por los operadores de multiplicación (*) o división (/). 
 EJEMPLO:
 <img width="523" height="59" alt="image" src="https://github.com/user-attachments/assets/76dccbc9-3a47-43f5-9c74-1ad19d909055" />
+
 En este ejemplo, el parser evalúa primero la multiplicación dentro del paréntesis y luego la suma, siguiendo las reglas de precedencia aritmética.
 
 ## Uso del compilador
