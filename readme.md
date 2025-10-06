@@ -8,7 +8,7 @@ Este compilador traduce programas sencillos escritos en Python a su equivalente 
 - **Python:** `3.13.7`
 - **C++:** `15.2.1` 
 
-## Tabla de tokens y palabras reservadas
+## Tabla de tokens
 
 | Categoría | Ejemplo Python | Equivalente en C++ | Descripción |
 | :--- | :--- | :--- | :--- |
