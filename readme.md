@@ -42,7 +42,7 @@ Este compilador traduce programas sencillos escritos en Python a su equivalente 
 
 ### Diagrama de árbol de sintaxis abstracta(ATS)
 <div align="center">
-  <img src="./imgs/" alt="Diagrama ATS" width="70%">
+  <img src="./imgs/ATS.png" alt="Diagrama ATS" width="70%">
 </div>
 
 ## Uso del compilador
