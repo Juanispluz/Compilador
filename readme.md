@@ -45,7 +45,7 @@ Este compilador traduce programas sencillos escritos en Python a su equivalente 
   <img src="./imgs/ATS.png" alt="Diagrama ATS" width="70%">
 </div>
 
-## Reglas del analizador sintáctico
+### Reglas del analizador sintáctico
 1.	Regla del Programa (Programa): La primera regla sintáctica define la estructura general del programa. Indica que un programa está formado por una secuencia de sentencias (instrucciones), que pueden estar separadas por saltos de línea.
 EJEMPLO:
 <img width="222" height="150" alt="image" src="https://github.com/user-attachments/assets/997c401b-1e4f-461c-bef9-326ccc71e036" />
