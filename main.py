@@ -2,6 +2,7 @@ import sys
 import os
 from lexer.lexer import Lexer
 from parser.parser import Parser
+from checker.checker import Checker
 
 def compilar_python_a_cpp(archivo_entrada, mostrar_tokens=False, mostrar_ast=False):
     print(f"=== COMPILADOR PYTHON A C++ ===")
@@ -53,19 +54,36 @@ def compilar_python_a_cpp(archivo_entrada, mostrar_tokens=False, mostrar_ast=Fal
     if mostrar_ast:
         print("\n--- ARBOL DE SINTAXIS ABSTRACTRA (AST) ---")
         parser.mostrar_arbol(ast)
+
+    # 4 - Analisis semantico
+    print("\n--- FASE 3: ANALISIS SEMANTICO ---")
+    checker = Checker()
+    errores_semanticos = checker.verificar(ast)
     
-    # 4 - Resumen final
+    if errores_semanticos:
+        print("Se encontraron errores semanticos:")
+        for error in errores_semanticos:
+            print(f"  - {error}")
+        return False
+    else:
+        print("Analisis semantico completado sin errores")
+        # Mostrar tabla de simbolos para debugging
+        print("Tabla de simbolos generada correctamente")
+
+    # 5- Generacion codigo final
+    
+    # 6 - Resumen final
     print("\n" + "=" * 50)
     print("COMPILACION EXITOSA")
     print(f"    -   Tokens procesados: {len(tokens)}")
     print(f"    -   Nodos en el AST: {contar_nodos_ast(ast)}")
+    print(f"    -   Variables declaradas: {len(checker.tabla_simbolos)}")
     print(f"    -   Archivo de salida: {generar_nombre_salida(archivo_entrada)}")
-    print("\nProximo paso: Generar codigo C++ desde el AST")
     
     return True
 
+# Cuenta todos los nodos en el AST
 def contar_nodos_ast(nodo):
-    """Cuenta todos los nodos en el AST"""
     if not nodo:
         return 0
     count = 1
@@ -73,13 +91,13 @@ def contar_nodos_ast(nodo):
         count += contar_nodos_ast(hijo)
     return count
 
+# Ultipo paso Genera el nombre del archivo de salida C++ 
 def generar_nombre_salida(archivo_entrada):
-    """Genera el nombre del archivo de salida C++"""
     nombre_base = os.path.splitext(archivo_entrada)[0]
     return f"{nombre_base}.cpp"
 
 def mostrar_uso():
-    print("Uso: python main.py <archivo.py> [opciones]")
+    print("Uso: python main.py <archivo.py> [Opciones]")
     print("\nOpciones:")
     print(" -t, --tokens        Mostrar lista de tokens")
     print(" -a, --ast           Mostrar el arbol de sintaxis abstracta")

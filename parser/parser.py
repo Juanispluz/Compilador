@@ -1,9 +1,11 @@
 # Clase NodoAST
 class NodoAST:
-    def __init__(self, tipo, valor=None):
+    def __init__(self, tipo, valor=None, linea=None, columna=None):
         self.tipo = tipo        # e.g. "Program", "Assign", "BinaryOp", "Number", "Identifier", "Print"
         self.valor = valor      # valor literal o nombre (si aplica)
         self.hijos = []         # lista de nodos hijos
+        self.linea = linea      # posición en el código (para errores)
+        self.columna = columna  # posición en el código (para errores)
 
     def agregar_hijo(self, nodo):
         self.hijos.append(nodo)
@@ -85,17 +87,15 @@ class Parser:
 
         # asignación: IDENTIFICADOR '=' EXPRESION
         if tok.tipo == "IDENTIFICADOR":
-            # Miramos adelante para ver si es '='
             siguiente = None
             if self.pos + 1 < len(self.tokens):
                 siguiente = self.tokens[self.pos + 1]
             if siguiente and siguiente.tipo == "OPERADOR_ASIGNACION" and siguiente.valor == "=":
                 return self.parsear_asignacion()
-            # si no es asignación, podemos intentar parsear la expresión (ej: uso de función o expresión)
-            # Pero en este mini-compiler preferimos tratarlo como error si no es asignación.
-            # Intentamos parsear como expresión por si el usuario puso una expresión sola.
+
+            # expresión suelta
             expr = self.parsear_expresion()
-            nodo_expr_stmt = NodoAST("ExprStmt")
+            nodo_expr_stmt = NodoAST("ExprStmt", linea=tok.linea, columna=tok.columna)
             if expr:
                 nodo_expr_stmt.agregar_hijo(expr)
                 return nodo_expr_stmt
@@ -103,83 +103,69 @@ class Parser:
                 self.errores.append(f"Error sintáctico cerca de '{tok.valor}' linea {tok.linea}")
                 return None
 
-        # Otros casos: intentar parsear expresión directamente (por ejemplo con paréntesis o literal)
+        # otros casos
         if tok.tipo in ("LITERAL_INT", "LITERAL_FLOAT", "LITERAL_STRING") or (tok.tipo == "DELIMITADOR" and tok.valor == "("):
             expr = self.parsear_expresion()
-            nodo_expr_stmt = NodoAST("ExprStmt")
+            nodo_expr_stmt = NodoAST("ExprStmt", linea=tok.linea, columna=tok.columna)
             if expr:
                 nodo_expr_stmt.agregar_hijo(expr)
                 return nodo_expr_stmt
             return None
 
-        # Si token no reconocido como inicio de sentencia, error
         self.errores.append(f"Error sintáctico: inicio de sentencia inválido '{tok.valor}' linea {tok.linea}")
         return None
 
     def parsear_print(self):
-        # consume 'print'
         tok_print = self.expect("PALABRA_CLAVE", "print")
         if tok_print is None:
             return None
-        # esperar '('
         if not (self.peek() and self.peek().tipo == "DELIMITADOR" and self.peek().valor == "("):
             self.errores.append(f"Error sintáctico: se esperaba '(' después de print en linea {tok_print.linea}")
             return None
-        self.advance()  # consumimos '('
+        self.advance()
 
-        # parsear la expresión dentro de print
         expr = self.parsear_expresion()
         if expr is None:
             self.errores.append(f"Error sintáctico: expresión inválida dentro de print en linea {tok_print.linea}")
             return None
 
-        # esperar ')'
         if not (self.peek() and self.peek().tipo == "DELIMITADOR" and self.peek().valor == ")"):
             self.errores.append(f"Error sintáctico: se esperaba ')' después de print en linea {tok_print.linea}")
             return None
-        self.advance()  # consumimos ')'
+        self.advance()
 
-        nodo = NodoAST("Print")
+        nodo = NodoAST("Print", linea=tok_print.linea, columna=tok_print.columna)
         nodo.agregar_hijo(expr)
         return nodo
 
     def parsear_asignacion(self):
-        # IDENTIFICADOR
         id_tok = self.expect("IDENTIFICADOR")
         if id_tok is None:
             return None
-
-        # '='
         eq_tok = self.expect("OPERADOR_ASIGNACION", "=")
         if eq_tok is None:
             return None
-
-        # EXPRESION
         expr = self.parsear_expresion()
         if expr is None:
             self.errores.append(f"Error sintáctico: expresión no esperada en la asignación de '{id_tok.valor}' linea {id_tok.linea}")
             return None
-
-        nodo = NodoAST("Assign", id_tok.valor)
+        nodo = NodoAST("Assign", id_tok.valor, linea=id_tok.linea, columna=id_tok.columna)
         nodo.agregar_hijo(expr)
         return nodo
 
-    # --- Expresiones con precedencia (+,-) menor y (*,/) mayor ---
     def parsear_expresion(self):
-        """Parsea expresiones que pueden contener + y - (y llamadas a parsear_term)"""
         nodo = self.parsear_term()
         if nodo is None:
             return None
-
         while True:
             tok = self.peek()
             if tok and tok.tipo == "OPERADOR_MATEMATICO" and tok.valor in ("+", "-"):
-                op = self.advance()  # + o -
+                op = self.advance()
                 derecha = self.parsear_term()
                 if derecha is None:
                     self.errores.append(f"Error sintáctico: operando derecho esperado para '{op.valor}' en linea {op.linea}")
                     return None
-                nodo_bin = NodoAST("BinaryOp", op.valor)
+                nodo_bin = NodoAST("BinaryOp", op.valor, linea=op.linea, columna=op.columna)
                 nodo_bin.agregar_hijo(nodo)
                 nodo_bin.agregar_hijo(derecha)
                 nodo = nodo_bin
@@ -188,20 +174,18 @@ class Parser:
         return nodo
 
     def parsear_term(self):
-        """Parsea multiplicaciones/divisiones"""
         nodo = self.parsear_factor()
         if nodo is None:
             return None
-
         while True:
             tok = self.peek()
-            if tok and tok.tipo == "OPERADOR_MATEMATICO" and tok.valor in ("*", "/","%"):
+            if tok and tok.tipo == "OPERADOR_MATEMATICO" and tok.valor in ("*", "/", "%"):
                 op = self.advance()
                 derecha = self.parsear_factor()
                 if derecha is None:
                     self.errores.append(f"Error sintáctico: operando derecho esperado para '{op.valor}' en linea {op.linea}")
                     return None
-                nodo_bin = NodoAST("BinaryOp", op.valor)
+                nodo_bin = NodoAST("BinaryOp", op.valor, linea=op.linea, columna=op.columna)
                 nodo_bin.agregar_hijo(nodo)
                 nodo_bin.agregar_hijo(derecha)
                 nodo = nodo_bin
@@ -210,24 +194,17 @@ class Parser:
         return nodo
 
     def parsear_factor(self):
-        """Números, strings, identificadores o sub-expresiones entre paréntesis"""
         tok = self.peek()
         if tok is None:
             return None
-
-        # Literales
         if tok.tipo in ("LITERAL_INT", "LITERAL_FLOAT", "LITERAL_STRING"):
             self.advance()
-            return NodoAST("Literal", tok.valor)
-
-        # Identificador (variable)
+            return NodoAST("Literal", tok.valor, linea=tok.linea, columna=tok.columna)
         if tok.tipo == "IDENTIFICADOR":
             self.advance()
-            return NodoAST("Identifier", tok.valor)
-
-        # Paréntesis '(' expr ')'
+            return NodoAST("Identifier", tok.valor, linea=tok.linea, columna=tok.columna)
         if tok.tipo == "DELIMITADOR" and tok.valor == "(":
-            self.advance()  # consumir '('
+            self.advance()
             expr = self.parsear_expresion()
             if expr is None:
                 self.errores.append(f"Error sintáctico: expresión esperada después de '(' en linea {tok.linea}")
@@ -235,18 +212,14 @@ class Parser:
             if not (self.peek() and self.peek().tipo == "DELIMITADOR" and self.peek().valor == ")"):
                 self.errores.append(f"Error sintáctico: se esperaba ')' en linea {tok.linea}")
                 return None
-            self.advance()  # consumir ')'
+            self.advance()
             return expr
-
-        # Si no es ninguno de los anteriores: error
         self.errores.append(f"Error sintáctico: token inesperado '{tok.valor}' tipo {tok.tipo} en linea {tok.linea}")
         return None
 
-    # Método para mostrar errores encontrados
     def detectar_errores(self):
         return self.errores
 
-    # Mostrar el árbol completo (raíz debe ser NodoAST Program)
     def mostrar_arbol(self, raiz):
         if raiz:
             raiz.mostrar()

@@ -1,0 +1,1 @@
+y = variable * 2

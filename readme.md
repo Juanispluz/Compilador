@@ -2,13 +2,13 @@
 
 **Tipo de Compilador:** Source to source
 
-Este compilador traduce programas sencillos escritos en Python a su equivalente en C++, enfocándose principalmente en operaciones aritméticas básicas (+, -, *, /), asignaciones de variables y el uso de tipos de datos int, float, str. El objetivo es mostrar cómo un programa en Python puede ser analizado léxica, sintáctica y semánticamente para luego generar un código equivalente en C++ que pueda ser compilado y ejecutado en un entorno real.
+Este compilador traduce programas sencillos escritos en **Python** a su equivalente en **C++**, enfocándose principalmente en operaciones aritméticas básicas **(+, -, *, /)**, asignaciones de variables y el uso de tipos de datos **int**, **float**, **str**. El objetivo es mostrar cómo un programa en Python puede ser **analizado léxica**, **sintáctica** y **semánticamente** para luego generar un código equivalente en C++ que pueda ser compilado y ejecutado en un entorno real.
 
 ### Versiones de los lenguajes
 - **Python:** `3.13.7`
 - **C++:** `15.2.1` 
 
-## Tabla de tokens
+## Tabla de tokens <a name="id1"></a>
 
 | Categoría | Ejemplo Python | Equivalente en C++ | Descripción |
 | :--- | :--- | :--- | :--- |
@@ -24,7 +24,8 @@ Este compilador traduce programas sencillos escritos en Python a su equivalente 
 | **Comentarios** | `# Comentario`, `""" Docstring """` | `// Comentario`, `/* Docstring */` | Texto ignorado por el compilador, utilizado para documentar. |
 | **Delimitadores** | `:`, `;`, `,`, `(`, `)`, `[`, `]`, `{`, `}`, `\n` | `;`, `,`, `{`, `}`, `(`, `)`, `[`, `]`, | Caracteres que definen la estructura y separación del código. |
 
-## Fases del compilador
+## Fases del compilador <a name="id2"></a>
+
 - **1. Análisis Léxico:** En esta etapa el compilador lee el código fuente en Python y lo divide en tokens, que son las unidades más pequeñas con significado (palabras clave, identificadores, operadores, literales y delimitadores).
 
 - **2. Análisis Sintáctico:** Con la lista de tokens, el compilador construye el Árbol de Sintaxis Abstracta (ATS), organizando las estructuras del programa y verificando que la secuencia de tokens tenga una forma válida (por ejemplo, que una asignación esté bien escrita).
@@ -46,38 +47,53 @@ Este compilador traduce programas sencillos escritos en Python a su equivalente 
 </div>
 
 ### Reglas del analizador sintáctico
-1.	Regla del Programa (Programa): La primera regla sintáctica define la estructura general del programa. Indica que un programa está formado por una secuencia de sentencias (instrucciones), que pueden estar separadas por saltos de línea.
+**1.	Regla del Programa (Programa):** La primera regla sintáctica define la estructura general del programa. Indica que un programa está formado por una secuencia de sentencias (instrucciones), que pueden estar separadas por saltos de línea.
 EJEMPLO:
-<img width="222" height="150" alt="image" src="https://github.com/user-attachments/assets/997c401b-1e4f-461c-bef9-326ccc71e036" />
 
-Aquí el programa tiene dos sentencias válidas: una asignación y una instrucción de impresión.
+<div align="center">
+  <img width="222" height="150" alt="image" src="https://github.com/user-attachments/assets/997c401b-1e4f-461c-bef9-326ccc71e036"/>
+</div>
 
-2.	Regla de la Sentencia (Sentencia): La segunda regla describe qué tipos de sentencias pueden aparecer dentro de un programa. En este caso, una sentencia puede ser una instrucción de impresión (print), una asignación de variable, o una expresión aislada (como una operación matemática que no se guarda en ninguna variable).
+> **Nota:** Aquí el programa tiene dos sentencias válidas: una asignación y una instrucción de impresión.
+
+**2.	Regla de la Sentencia (Sentencia):** La segunda regla describe qué tipos de sentencias pueden aparecer dentro de un programa. En este caso, una sentencia puede ser una instrucción de impresión (print), una asignación de variable, o una expresión aislada (como una operación matemática que no se guarda en ninguna variable).
 EJEMPLO:
-<img width="231" height="186" alt="image" src="https://github.com/user-attachments/assets/2e2582f7-ab21-4b06-91b2-232bd1924975" />
 
-Las tres líneas anteriores representan los tres tipos de sentencias que el parser sabe interpretar.
+<div align="center">
+  <img width="231" height="186" alt="image" src="https://github.com/user-attachments/assets/2e2582f7-ab21-4b06-91b2-232bd1924975"/>
+</div>
 
-3.	Regla de la Instrucción print (IMPRIMIR): La tercera regla específica cómo debe escribirse una instrucción print. Según la gramática, una sentencia print debe comenzar con la palabra clave print, seguida de un paréntesis de apertura, una expresión válida dentro de los paréntesis, y finalmente un paréntesis de cierre.
+> **Nota:** Las tres líneas anteriores representan los tres tipos de sentencias que el parser sabe interpretar.
+
+**3.	Regla de la Instrucción print (IMPRIMIR):** La tercera regla específica cómo debe escribirse una instrucción print. Según la gramática, una sentencia print debe comenzar con la palabra clave print, seguida de un paréntesis de apertura, una expresión válida dentro de los paréntesis, y finalmente un paréntesis de cierre.
 EJEMPLO CORRECTO:
-<img width="247" height="89" alt="image" src="https://github.com/user-attachments/assets/fb6b6a5b-1835-4ddd-857b-5d800b41b03b" />
 
-Esta regla mantiene la coherencia con la sintaxis moderna de Python, donde el uso de paréntesis en print es obligatorio.
+<div align="center">
+  <img width="247" height="89" alt="image" src="https://github.com/user-attachments/assets/fb6b6a5b-1835-4ddd-857b-5d800b41b03b"/>
+</div>
 
-4. Regla de Asignación (Assign)
+> **Nota:** Esta regla mantiene la coherencia con la sintaxis moderna de Python, donde el uso de paréntesis en print es obligatorio.
+
+**4. Regla de Asignación (Assign)**
 La cuarta regla sintáctica define cómo se realiza una asignación de valores a variables. En esta estructura, primero debe aparecer un identificador (el nombre de la variable), seguido del operador de asignación =, y finalmente una expresión que representa el valor que se le asignará.
 EJEMPLO:
-<img width="328" height="69" alt="image" src="https://github.com/user-attachments/assets/81e456b7-642b-4bfd-a065-5ddcaed6dd76" />
 
-Aquí, el identificador suma recibe el valor resultante de la expresión a + b * 3
+<div align="center">
+<img width="328" height="69" alt="image" src="https://github.com/user-attachments/assets/81e456b7-642b-4bfd-a065-5ddcaed6dd76"/>
+</div>
+
+> **Nota:** Aquí, el identificador suma recibe el valor resultante de la expresión a + b * 3
 
 5. Reglas de expresiones y operaciones (Expr, Term, Factor): Esta regla define cómo se construyen las expresiones aritméticas y el orden en que deben evaluarse las operaciones. Una expresión (Expr) puede contener uno o varios términos separados por los operadores de suma (+) o resta (-). A su vez, cada término (Term) puede incluir factores separados por los operadores de multiplicación (*) o división (/). 
 EJEMPLO:
-<img width="523" height="59" alt="image" src="https://github.com/user-attachments/assets/76dccbc9-3a47-43f5-9c74-1ad19d909055" />
 
-En este ejemplo, el parser evalúa primero la multiplicación dentro del paréntesis y luego la suma, siguiendo las reglas de precedencia aritmética.
+<div align="center">
+<img width="523" height="59" alt="image" src="https://github.com/user-attachments/assets/76dccbc9-3a47-43f5-9c74-1ad19d909055"/>
+</div>
 
-## Uso del compilador
+> **Nota:** En este ejemplo, el parser evalúa primero la multiplicación dentro del paréntesis y luego la suma, siguiendo las reglas de precedencia aritmética.
+
+## Uso del compilador <a name="id3"></a>
 
 Para ejecutar el compilador, utiliza la terminal siguiendo la siguiente sintaxis:
 
