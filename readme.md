@@ -51,7 +51,7 @@ Este compilador traduce programas sencillos escritos en **Python** a su equivale
 EJEMPLO:
 
 <div align="center">
-  <img width="222" height="150" alt="image" src="https://github.com/user-attachments/assets/997c401b-1e4f-461c-bef9-326ccc71e036"/>
+  <img width="220" height="150" src="./imgs/sintactico/programa.png" alt="Programa"/>
 </div>
 
 > **Nota:** Aquí el programa tiene dos sentencias válidas: una asignación y una instrucción de impresión.
@@ -60,16 +60,16 @@ EJEMPLO:
 EJEMPLO:
 
 <div align="center">
-  <img width="231" height="186" alt="image" src="https://github.com/user-attachments/assets/2e2582f7-ab21-4b06-91b2-232bd1924975"/>
+  <img width="230" height="180" src="./imgs/sintactico/sentencia.png" alt="Sentencia"/>
 </div>
 
 > **Nota:** Las tres líneas anteriores representan los tres tipos de sentencias que el parser sabe interpretar.
 
 **3.	Regla de la Instrucción print (IMPRIMIR):** La tercera regla específica cómo debe escribirse una instrucción print. Según la gramática, una sentencia print debe comenzar con la palabra clave print, seguida de un paréntesis de apertura, una expresión válida dentro de los paréntesis, y finalmente un paréntesis de cierre.
-EJEMPLO CORRECTO:
+EJEMPLO:
 
 <div align="center">
-  <img width="247" height="89" alt="image" src="https://github.com/user-attachments/assets/fb6b6a5b-1835-4ddd-857b-5d800b41b03b"/>
+  <img width="240" height="80" src="./imgs/sintactico/imprimir.png" alt="Instrucción print"/>
 </div>
 
 > **Nota:** Esta regla mantiene la coherencia con la sintaxis moderna de Python, donde el uso de paréntesis en print es obligatorio.
@@ -79,19 +79,33 @@ La cuarta regla sintáctica define cómo se realiza una asignación de valores a
 EJEMPLO:
 
 <div align="center">
-<img width="328" height="69" alt="image" src="https://github.com/user-attachments/assets/81e456b7-642b-4bfd-a065-5ddcaed6dd76"/>
+<img width="320" height="70" src="./imgs/sintactico/assing.png" alt="Assign"/>
 </div>
 
-> **Nota:** Aquí, el identificador suma recibe el valor resultante de la expresión a + b * 3
+> **Nota:** Aquí, el identificador suma recibe el valor resultante de la expresión a + b * 3.
 
-5. Reglas de expresiones y operaciones (Expr, Term, Factor): Esta regla define cómo se construyen las expresiones aritméticas y el orden en que deben evaluarse las operaciones. Una expresión (Expr) puede contener uno o varios términos separados por los operadores de suma (+) o resta (-). A su vez, cada término (Term) puede incluir factores separados por los operadores de multiplicación (*) o división (/). 
+5. **Reglas de expresiones y operaciones (Expr, Term, Factor):** Esta regla define cómo se construyen las expresiones aritméticas y el orden en que deben evaluarse las operaciones. Una expresión (Expr) puede contener uno o varios términos separados por los operadores de suma (+) o resta (-). A su vez, cada término (Term) puede incluir factores separados por los operadores de multiplicación (*) o división (/). 
 EJEMPLO:
 
 <div align="center">
-<img width="523" height="59" alt="image" src="https://github.com/user-attachments/assets/76dccbc9-3a47-43f5-9c74-1ad19d909055"/>
+<img width="520" height="60" alt="image" src="./imgs/sintactico/expresion_operacion.png"/>
 </div>
 
 > **Nota:** En este ejemplo, el parser evalúa primero la multiplicación dentro del paréntesis y luego la suma, siguiendo las reglas de precedencia aritmética.
+
+### Reglas del analizador semántico
+
+1. **Regla de tipos:** Esta regla verifica que las operaciones sean compatibles, es decir, no sumar un entero con una cadena, asegurando la coherencia entre tipo de expresiones, asignaciones y llamadas de funciones. EJEMPLO:
+
+<div align="center">
+<img width="200"  src="./imgs/semantico/declaracion.png" alt="Regla de declaración"/>
+</div>
+
+2. **Regla de declaración:** Esta regla exige que toda variable, función u otro identificador sea declarado antes de usarse, permitiendo asociar cada identificador con su tipo, alcance y demas propiedades para su posterior análisis. EJEMPLO:
+
+<div align="center">
+<img width="240" src="./imgs/semantico/tipos.png" alt="Regla de tipos"/>
+</div>
 
 ## Uso del compilador <a name="id3"></a>
 

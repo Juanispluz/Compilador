@@ -1,3 +1,4 @@
-y = variable * 2
+a = "texto" - "otro texto"
 
-# El parser lo detecta como error debido a que hay una variable sin definir en este caso "variable"
+# El checker tiene definido la regla de tipos, es decir se puede concatenar y/o juntar variables siempre 
+# y cuando sean de valor numerico, por eso no puede juntar un int/float con un string

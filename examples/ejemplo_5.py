@@ -1,3 +1,4 @@
-a = "texto" - "otro texto"
+a = 5 +
 
-# El parser lo detecta como error porque no se puede realizar una operacion matematica que reste strings
+# El parser espera que en la operacion aritmetica depues del "+" 
+# haya un numero/variable de valor entero, al no haber, se queda esperando este y da error

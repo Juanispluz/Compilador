@@ -1,3 +1,4 @@
-x = "hola" + 5
+x = ("hola" + 5
 
-# El parser lo detecta como error porque no se puede sumar un string con un int
+# El parser lo detecta error porque espera que el limitador este cerrado como abierto, 
+# pero en este caso falta el delimitador de ‘)’, por eso da error
