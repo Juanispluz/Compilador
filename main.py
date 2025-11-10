@@ -3,6 +3,7 @@ import os
 from lexer.lexer import Lexer
 from parser.parser import Parser
 from checker.checker import Checker
+from codegen.generator import CodeGenerator
 
 def compilar_python_a_cpp(archivo_entrada, mostrar_tokens=False, mostrar_ast=False):
     print(f"=== COMPILADOR PYTHON A C++ ===")
@@ -71,7 +72,17 @@ def compilar_python_a_cpp(archivo_entrada, mostrar_tokens=False, mostrar_ast=Fal
         print("Tabla de simbolos generada correctamente")
 
     # 5- Generacion codigo final
+    print("\n--- FASE 4: GENERACION DE CODIGO C++ ---")
+    generador = CodeGenerator(ast)
+    codigo_cpp = generador.generar_codigo()
     
+    # Crear archivo .cpp
+    nombre_salida = generar_nombre_salida(archivo_entrada)
+    with open(nombre_salida, "w", encoding="utf-8") as f:
+        f.write(codigo_cpp)
+        
+    print(f"Archivo C++ generado correctamente: {nombre_salida}")
+
     # 6 - Resumen final
     print("\n" + "=" * 50)
     print("COMPILACION EXITOSA")
